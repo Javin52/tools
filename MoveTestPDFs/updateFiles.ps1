@@ -25,7 +25,6 @@ if ( Test-Path -Path .\$path -PathType Leaf ) {
     rm FilesUpdated.txt
 }
 
-#robocopy $source $dest /L /XL | Tee-Object -file test.txt
 robocopy $source $dest /L /XL | Tee-Object -file $tempFile |
     foreach { if ( $_ -match "Newer" ) { $_.Split("`t")[-1] >> $path }}
 
