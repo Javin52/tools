@@ -3,6 +3,7 @@
 # later if needed.
 
 # Fill in source and destination folder if you want a default value
+# to add folders on input, use config flag
 param (
     [switch]$config = $false,
     [string]$source = "",
