@@ -39,3 +39,5 @@ $confirmMove = $( Read-Host )
 if ($confirmMove -eq "y") {
     robocopy $source $dest /XL
 }
+
+Write-Host "Updating files has been completed."
