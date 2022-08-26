@@ -109,44 +109,4 @@ if ( Test-Path -Path $parent\$path -PathType Leaf ) {
 
 updateBatch $source $dest
 
-$folderName = $parentParts[-1]
-
-# Main script has been finished, the following part would be modified 
-# based on application needs, below is just an example 
-
-Write-Host "Proceed to rename files in an different folder called $folderName-renamed?
-y for Yes and n for No"
-$confirmMove = $( Read-Host )
-
-if ( $confirmMove -eq "n" ) {
-    exit
-}
-
-# ensure the renamed folder is not there from previous attempts
-if ( Test-Path -Path .\$folderName-Renamed  ) {
-    Write-Host "proceed to delete " $folderName "-Renamed?
-    y for Yes and n for No"
-    $conifrmMove = $ ( Read-Host )
-    if ( $confirmMove -eq "n" ) {
-        exit
-    }
-    Remove-Item $folderName-Renamed -recurse
-}
-
-# creates the renamed folder in the parent directory of source
-cd $parent
-Copy-Item $source $folderName-Renamed -recurse
-cd $folderName-Renamed
-
-# Removes a specific type of file
-Remove-Item ele-*-ann-en.pdf
-
-# Renames all files, change prefix, then suffix for both english and french
-ls | Rename-Item -NewName {$_.name -replace "prefix-", ""}
-ls | Rename-Item -NewName {$_.name -replace "-suffix-en", "_E"}
-ls | Rename-Item -NewName {$_.name -replace "-suffix-fr","_F"}    
-
-# run the update function again
-updateBatch . $dest
-
 Write-Host "Updating files has been completed."

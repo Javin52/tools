@@ -7,8 +7,8 @@
 # to add folders on input, use config flag
 param (
     [switch]$config = $false,
-    [string]$source = "C:\Users\Javin Mehta\Downloads\source-Renamed",
-    [string]$test = "C:\Users\Javin Mehta\Downloads\dest"
+    [string]$source = "",
+    [string]$test = ""
 )
 
 $parentParts = $source.Split("\")
