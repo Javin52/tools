@@ -90,7 +90,7 @@ if ( $source -eq "" -or $dest -eq "") {
 
 $path = $( "FilesUpdated.txt" )
 
-parentParts = $source.Split("\")
+$parentParts = $source.Split("\")
 if ( $parent -eq "") {
     for ( $i = 0 ; $i -lt $parentParts.count - 1 ; $i++) {
         if ( ! $i -eq 0){
