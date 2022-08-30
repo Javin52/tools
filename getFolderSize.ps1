@@ -1,23 +1,17 @@
-Write-Host "`n`n`t" ( "Directory:", $PSScriptRoot, "`n`n" -join " " )
-
-function getDirLastWriteTime {
-    param (
-        $object
-    )
-    $source = $PSScriptRoot, $object.Name -join "\"
-    Write-Host $source
-    $latest = Get-ChildItem $source -recurse  | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-    Write-Output $latest.LastWriteTime
-}
+param (
+    [string]$path=$PSScriptRoot
+)
 
 function getLength {
     param (
         $object
     )
     
-    $source = $PSScriptRoot, $object.Name -join "\"
-    # Write-Host $source
+    $source = $path, $object.Name -join "\"
     $total = "{0}" -f ((Get-ChildItem $source -Recurse | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum)
+    if ( [string]::isNullorWhiteSpace($total) ) {
+        $total = 0
+    }
     Write-Output $total
 }
 
@@ -47,8 +41,12 @@ function writeInfo {
     } else {
         $length = getLength $object
     }
-
-    $mag = [Math]::Ceiling( [Math]::Log10($length) )
+    
+    if ( $length -eq 0) {
+        $mag = 1
+    } else {
+        $mag = [Math]::Ceiling( [Math]::Log10($length) )
+    }
     $fill = 15 - $mag
     $space = ""
     for ( $i = 0; $i -lt $fill; $i++ ) {
@@ -60,15 +58,16 @@ function writeInfo {
     Write-Output $output
 }
 
+Write-Host "`n`n`t" ( "Directory:", $path, "`n`n" -join " " )
 Write-Host "Mode                 LastWriteTime         Length Name"
 Write-Host "----                 -------------         ------ ----"
 
-foreach ( $object in Get-ChildItem -directory) {
+foreach ( $object in Get-ChildItem -Path $path -directory) {
     $output = writeInfo $object $false
     Write-Host $output
 }
 
-foreach ( $object in Get-ChildItem -file ) {
+foreach ( $object in Get-ChildItem -Path $path -file ) {
     $output = writeInfo $object $true
     Write-Host $output
 }
