@@ -1,14 +1,4 @@
-Get-ChildItem
-Write-Output "------------------------------------------------------------------"
-
-function getVal{
-    param (
-        $object, 
-        $propName
-    )
-    $list = $object | select -expand LastWriteTime | Select-Object -Property $propName
-    Write-Output $list.$propName
-}
+Write-Host "`n`n`t" ( "Directory:", $PSScriptRoot, "`n`n" -join " " )
 
 function getDirLastWriteTime {
     param (
@@ -31,20 +21,33 @@ function getLength {
     Write-Output $total
 }
 
-Write-Host "Mode                 LastWriteTime         Length Name"
-Write-Host "----                 -------------         ------ ----"
+function doubleDig {
+    param (
+        $hour
+    )
+    $hour12 = $hour % 12
+    Write-Output (($hour12 -le 12 -and $hour12 -ge 10 ) -or $hour12 -eq 0 )
+}
 
-foreach ( $object in Get-ChildItem -directory) {
-    # Write-Output $object " is a folder/directory"
+function writeInfo {
+    param  (
+        $object,
+        [switch]$isFile
+    )
     $mode =  $object.Mode
     $hour = $object.LastWriteTime.Hour
-    if ( $hour -eq 12 -or $hour -eq 0 ) {
+    if ( ( doubleDig $hour ) ) {
         $writeTime = $object.LastWriteTime.ToString("yyyy-MM-dd  h:mm tt")
     } else {
         $writeTime = $object.LastWriteTime.ToString("yyyy-MM-dd   h:mm tt")
     }
 
-    $length = getLength $object
+    if ( $isFile ) {
+        $length = $object.Length
+    } else {
+        $length = getLength $object
+    }
+
     $mag = [Math]::Ceiling( [Math]::Log10($length) )
     $fill = 15 - $mag
     $space = ""
@@ -54,9 +57,18 @@ foreach ( $object in Get-ChildItem -directory) {
     
     $name = $object.Name
     $output = $mode, "        ", $writeTime, $space, $length, " ", $name -join ""
+    Write-Output $output
+}
+
+Write-Host "Mode                 LastWriteTime         Length Name"
+Write-Host "----                 -------------         ------ ----"
+
+foreach ( $object in Get-ChildItem -directory) {
+    $output = writeInfo $object $false
     Write-Host $output
 }
 
 foreach ( $object in Get-ChildItem -file ) {
-    Write-Output $object
+    $output = writeInfo $object $true
+    Write-Host $output
 }
