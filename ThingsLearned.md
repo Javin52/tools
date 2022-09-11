@@ -119,3 +119,8 @@ Get-FormatData -PowerShellVersion $PSVersionTable.PSVersion -TypeName System.IO.
    Export-FormatData -Path ./folderView.Format.ps1xml
 Update-FormatData -AppendPath ./folderView.Format.ps1xml
 ```
+
+This is a more complex way of formatting output by creating your own template/view when using ```Format-Table``` command
+More information can be found:
+https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/format-table?view=powershell-7.2&viewFallbackFrom=powershell-6
+https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_format.ps1xml?view=powershell-7.2#sample-xml-for-a-format-table-custom-view

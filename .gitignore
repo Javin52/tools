@@ -2,3 +2,7 @@
 FilesUpdated.txt
 generateTestCases.ps1
 master.ps1
+*temp*
+*test*
+folderView.Format.ps1xml
+ikeaAPI/
